@@ -22,6 +22,7 @@ type UselessFacts struct {
 
 func (c *Client) GetUselessFact() (UselessFacts, error) {
 	const errorString = "could not get uselessfact: %v"
+
 	req, err := http.NewRequest("GET", BaseUselessFactsEndPoint, nil)
 	if err != nil {
 		return UselessFacts{}, fmt.Errorf(errorString, err)
@@ -31,12 +32,16 @@ func (c *Client) GetUselessFact() (UselessFacts, error) {
 	if err != nil {
 		return UselessFacts{}, fmt.Errorf(errorString, err)
 	}
+	defer res.Body.Close()
 
-	dat, err := io.ReadAll(req.Body)
+	if res.StatusCode >= 400 {
+		return UselessFacts{}, fmt.Errorf(errorString, fmt.Sprintf("unexpected status code: %d", res.StatusCode))
+	}
+
+	dat, err := io.ReadAll(res.Body)
 	if err != nil {
 		return UselessFacts{}, fmt.Errorf(errorString, err)
 	}
-	defer res.Body.Close()
 
 	uselessFacts := UselessFacts{}
 	if err := json.Unmarshal(dat, &uselessFacts); err != nil {
