@@ -5,4 +5,6 @@ messages: List[dict[str, str]] = [
     {"role": "user", "content": "Who are you?"},
 ]
 pipe: pipeline = pipeline("text-generation", model="alpindale/magnum-72b-v1")
-pipe(messages)
+result: str = pipe(messages)
+
+print(result)
