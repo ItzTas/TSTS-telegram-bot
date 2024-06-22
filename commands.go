@@ -54,20 +54,24 @@ func startBot(cfg *config) {
 		}
 		msg := tgbotapi.NewMessage(update.Message.From.ID, "")
 		if update.Message.IsCommand() {
-			err := GetCommands(cfg)[update.Message.Command()].callback(&msg)
+			err := GetCommands(cfg)[update.Message.Command()].callback(bot, &msg)
 			if err != nil {
 				msg.Text = err.Error()
+				_, err := bot.Send(msg)
+				if err != nil {
+					fmt.Println("Could not send message ", err)
+					continue
+				}
 			}
-		} else {
-			err := cfg.getChatResponse(&msg, update.Message.Text)
-			if err != nil {
-				msg.Text = err.Error()
-			}
-		}
-		_, err := bot.Send(msg)
-		if err != nil {
-			fmt.Println("Could not send message ", err)
 			continue
+		}
+		if err := cfg.getChatResponse(bot, &msg, update.Message.Text); err != nil {
+			msg.Text = err.Error()
+			_, err := bot.Send(msg)
+			if err != nil {
+				fmt.Println("Could not send message ", err)
+				continue
+			}
 		}
 	}
 }
@@ -78,7 +82,7 @@ type config struct {
 
 type handlerCommands struct {
 	commandsInfo tgbotapi.BotCommand
-	callback     func(*tgbotapi.MessageConfig) error
+	callback     func(*tgbotapi.BotAPI, *tgbotapi.MessageConfig) error
 }
 
 func GetCommands(cfg *config) map[string]handlerCommands {
