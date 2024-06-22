@@ -3,8 +3,6 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 )
 
 const (
@@ -21,31 +19,14 @@ type UselessFacts struct {
 }
 
 func (c *Client) GetUselessFact() (UselessFacts, error) {
-	const errorString = "could not get uselessfact: %v"
-
-	req, err := http.NewRequest("GET", BaseUselessFactsEndPoint, nil)
+	dat, err := c.getURLData(BaseUselessFactsEndPoint)
 	if err != nil {
-		return UselessFacts{}, fmt.Errorf(errorString, err)
-	}
-
-	res, err := c.client.Do(req)
-	if err != nil {
-		return UselessFacts{}, fmt.Errorf(errorString, err)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode >= 400 {
-		return UselessFacts{}, fmt.Errorf(errorString, fmt.Sprintf("unexpected status code: %d", res.StatusCode))
-	}
-
-	dat, err := io.ReadAll(res.Body)
-	if err != nil {
-		return UselessFacts{}, fmt.Errorf(errorString, err)
+		return UselessFacts{}, fmt.Errorf("could not get uselessfact: %v", err)
 	}
 
 	uselessFacts := UselessFacts{}
 	if err := json.Unmarshal(dat, &uselessFacts); err != nil {
-		return UselessFacts{}, fmt.Errorf(errorString, err)
+		return UselessFacts{}, fmt.Errorf("could not get uselessfact: %v", err)
 	}
 	return uselessFacts, nil
 }
