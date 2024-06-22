@@ -1,1 +1,1 @@
-flask --app chat run
+flask --app server run
