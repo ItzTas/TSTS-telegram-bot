@@ -19,7 +19,7 @@ type UselessFacts struct {
 }
 
 func (c *Client) GetUselessFact() (UselessFacts, error) {
-	dat, err := c.getURLData(BaseUselessFactsEndPoint)
+	dat, err := c.getURLData(BaseUselessFactsEndPoint, nil)
 	if err != nil {
 		return UselessFacts{}, fmt.Errorf("could not get uselessfact: %v", err)
 	}

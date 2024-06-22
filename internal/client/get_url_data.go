@@ -5,10 +5,14 @@ import (
 	"net/http"
 )
 
-func (c *Client) getURLData(url string) ([]byte, error) {
-	req, err := http.NewRequest("GET", url, nil)
+func (c *Client) getURLData(url string, body io.Reader) ([]byte, error) {
+	req, err := http.NewRequest("GET", url, body)
 	if err != nil {
 		return []byte{}, err
+	}
+
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
 	}
 
 	res, err := c.client.Do(req)
