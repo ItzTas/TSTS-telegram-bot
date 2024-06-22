@@ -96,12 +96,5 @@ func GetCommands(cfg *config) map[string]handlerCommands {
 			},
 			callback: cfg.randomFactCommandCallback,
 		},
-		// "math": {
-		// 	commandsInfo: tgbotapi.BotCommand{
-		// 		Command:     "math",
-		// 		Description: "Does a math operation",
-		// 	},
-		// 	callback: cfg.mathCommandCallback,
-		// },
 	}
 }
