@@ -30,8 +30,6 @@ func startBot(cfg *config) {
 		return
 	}
 
-	bot.Debug = true
-
 	commands := []tgbotapi.BotCommand{}
 	for _, cmd := range GetCommands(cfg) {
 		commands = append(commands, cmd.commandsInfo)
@@ -56,12 +54,15 @@ func startBot(cfg *config) {
 		}
 		msg := tgbotapi.NewMessage(update.Message.From.ID, "")
 		if update.Message.IsCommand() {
-			err := GetCommands(cfg)[update.Message.Command()].callback(bot, &update, &msg)
+			err := GetCommands(cfg)[update.Message.Command()].callback(&msg)
 			if err != nil {
 				msg.Text = err.Error()
 			}
 		} else {
-			msg.Text = update.Message.Text
+			err := cfg.getChatResponse(&msg, update.Message.Text)
+			if err != nil {
+				msg.Text = err.Error()
+			}
 		}
 		_, err := bot.Send(msg)
 		if err != nil {
@@ -77,7 +78,7 @@ type config struct {
 
 type handlerCommands struct {
 	commandsInfo tgbotapi.BotCommand
-	callback     func(*tgbotapi.BotAPI, *tgbotapi.Update, *tgbotapi.MessageConfig) error
+	callback     func(*tgbotapi.MessageConfig) error
 }
 
 func GetCommands(cfg *config) map[string]handlerCommands {
