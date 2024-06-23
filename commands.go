@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/ItzTas/TSTSbot/internal/client"
@@ -31,7 +32,7 @@ func startBot(cfg *config) {
 	}
 
 	commands := []tgbotapi.BotCommand{}
-	for _, cmd := range GetCommands(cfg) {
+	for _, cmd := range cfg.GetCommands() {
 		commands = append(commands, cmd.commandsInfo)
 	}
 
@@ -54,7 +55,8 @@ func startBot(cfg *config) {
 		}
 		msg := tgbotapi.NewMessage(update.Message.From.ID, "")
 		if update.Message.IsCommand() {
-			err := GetCommands(cfg)[update.Message.Command()].callback(bot, &msg)
+			args := strings.Split(update.Message.Text, " ")
+			err := cfg.GetCommands()[update.Message.Command()].callback(bot, &msg, args...)
 			if err != nil {
 				msg.Text = err.Error()
 				_, err := bot.Send(msg)
@@ -82,10 +84,10 @@ type config struct {
 
 type handlerCommands struct {
 	commandsInfo tgbotapi.BotCommand
-	callback     func(*tgbotapi.BotAPI, *tgbotapi.MessageConfig) error
+	callback     func(*tgbotapi.BotAPI, *tgbotapi.MessageConfig, ...string) error
 }
 
-func GetCommands(cfg *config) map[string]handlerCommands {
+func (cfg *config) GetCommands() map[string]handlerCommands {
 	return map[string]handlerCommands{
 		"help": {
 			commandsInfo: tgbotapi.BotCommand{
