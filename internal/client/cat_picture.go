@@ -23,8 +23,13 @@ func (c *Client) GetCatPictures(limit string) ([]CatImage, error) {
 		"x-api-key": []string{c.APIKeys["catAPIKey"]},
 	}
 
-	if _, err := strconv.Atoi(limit); err != nil || limit == "" {
+	l, err := strconv.Atoi(limit)
+	if err != nil || limit == "" {
 		limit = "1"
+	}
+
+	if l > 12 {
+		limit = "12"
 	}
 
 	url := BaseCatImageURL + "?limit=" + limit

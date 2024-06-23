@@ -6,7 +6,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (cfg *config) helpCommandCallback(bot *tgbotapi.BotAPI, msg *tgbotapi.MessageConfig, args ...string) error {
+func (cfg *config) helpCommandCallback(_ tgbotapi.Update, bot *tgbotapi.BotAPI, msg *tgbotapi.MessageConfig, args ...string) error {
 	if len(args) > 1 {
 		return cfg.helpEspecificCMD(bot, msg, args[1])
 	}

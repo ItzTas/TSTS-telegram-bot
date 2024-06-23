@@ -46,7 +46,7 @@ func startBot(cfg *config) {
 		msg := tgbotapi.NewMessage(update.Message.From.ID, "")
 		if update.Message.IsCommand() {
 			args := strings.Split(update.Message.Text, " ")
-			err := cfg.GetCommands()[update.Message.Command()].callback(bot, &msg, args...)
+			err := cfg.GetCommands()[update.Message.Command()].callback(update, bot, &msg, args...)
 			if err != nil {
 				msg.Text = err.Error()
 				_, err := bot.Send(msg)
@@ -75,7 +75,7 @@ type config struct {
 
 type handlerCommands struct {
 	commandsInfo tgbotapi.BotCommand
-	callback     func(*tgbotapi.BotAPI, *tgbotapi.MessageConfig, ...string) error
+	callback     func(tgbotapi.Update, *tgbotapi.BotAPI, *tgbotapi.MessageConfig, ...string) error
 }
 
 func (cfg *config) GetCommands() map[string]handlerCommands {
@@ -93,6 +93,13 @@ func (cfg *config) GetCommands() map[string]handlerCommands {
 				Description: "Shows a random fact",
 			},
 			callback: cfg.randomFactCommandCallback,
+		},
+		"randomcatimage": {
+			commandsInfo: tgbotapi.BotCommand{
+				Command:     "randomcatimage",
+				Description: "shows randoms images of cute cats\n write a number after the comand to define the limit with 12 beeing the maximum",
+			},
+			callback: cfg.randomCatImageCommandCallback,
 		},
 	}
 }
