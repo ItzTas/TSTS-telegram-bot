@@ -3,13 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/ItzTas/TSTSbot/internal/client"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/joho/godotenv"
 )
 
 const (
@@ -17,15 +15,7 @@ const (
 )
 
 func startBot(cfg *config) {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Could not get enviroment variables ", err)
-		return
-	}
-
-	botToken := os.Getenv("TELEGRAM_BOT_TOKEN")
-
-	bot, err := tgbotapi.NewBotAPI(botToken)
+	bot, err := tgbotapi.NewBotAPI(cfg.ConfigKeys["botToken"])
 	if err != nil {
 		fmt.Println("Could not create bot API ", err)
 		return
@@ -79,7 +69,8 @@ func startBot(cfg *config) {
 }
 
 type config struct {
-	client client.Client
+	client     client.Client
+	ConfigKeys map[string]string
 }
 
 type handlerCommands struct {

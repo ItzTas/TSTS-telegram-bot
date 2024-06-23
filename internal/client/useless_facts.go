@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 const (
@@ -19,7 +20,7 @@ type UselessFacts struct {
 }
 
 func (c *Client) GetUselessFact() (UselessFacts, error) {
-	dat, err := c.getURLData(BaseUselessFactsEndPoint, nil)
+	dat, err := c.getURLData(BaseUselessFactsEndPoint, nil, http.Header{})
 	if err != nil {
 		return UselessFacts{}, fmt.Errorf("could not get uselessfact: %v", err)
 	}

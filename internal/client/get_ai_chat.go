@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 const (
@@ -24,7 +25,7 @@ func (c *Client) GetaiChat(content string) (string, error) {
 		return "", fmt.Errorf(errorString, err)
 	}
 
-	dat, err := c.getURLData(BaseAIEndpoint, bytes.NewBuffer(body))
+	dat, err := c.getURLData(BaseAIEndpoint, bytes.NewBuffer(body), http.Header{})
 	if err != nil {
 		return "", fmt.Errorf(errorString, err)
 	}

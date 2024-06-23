@@ -6,14 +6,16 @@ import (
 )
 
 type Client struct {
-	client http.Client
+	client  http.Client
+	APIKeys map[string]string
 }
 
-func NewClient(timeout time.Duration) Client {
+func NewClient(timeout time.Duration, APIKeys map[string]string) Client {
 	c := Client{
 		client: http.Client{
 			Timeout: timeout,
 		},
+		APIKeys: APIKeys,
 	}
 
 	return c
