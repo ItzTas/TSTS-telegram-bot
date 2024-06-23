@@ -4,7 +4,7 @@ This is a general purpuse bot! with commands and a simple AI that you can talk t
 
 ## How to run 
 
-first you need to get a (telegram token)[https://www.siteguarding.com/en/how-to-get-telegram-bot-api-token] and set it into your enviroment
+first you need to get a !(telegram token)[https://www.siteguarding.com/en/how-to-get-telegram-bot-api-token] and set it into your enviroment
 then just run the scripts/run.sh in the root of the project and voila! the bot is running
 
 ## comands and chat
