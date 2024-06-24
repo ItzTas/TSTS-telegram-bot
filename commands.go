@@ -46,7 +46,17 @@ func startBot(cfg *config) {
 		msg := tgbotapi.NewMessage(update.Message.From.ID, "")
 		if update.Message.IsCommand() {
 			args := strings.Split(update.Message.Text, " ")
-			err := cfg.GetCommands()[update.Message.Command()].callback(update, bot, &msg, args...)
+			command, exists := cfg.GetCommands()[update.Message.Command()]
+			if !exists {
+				msg.Text = "Command does not exist"
+				_, err := bot.Send(msg)
+				if err != nil {
+					fmt.Println("Could not send message ", err)
+					continue
+				}
+				continue
+			}
+			err = command.callback(update, bot, &msg, args...)
 			if err != nil {
 				msg.Text = err.Error()
 				_, err := bot.Send(msg)
