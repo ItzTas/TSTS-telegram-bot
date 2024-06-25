@@ -43,6 +43,7 @@ func startBot(cfg *config) {
 		if update.Message == nil {
 			continue
 		}
+
 		msg := tgbotapi.NewMessage(update.Message.From.ID, "")
 		if update.Message.IsCommand() {
 			args := strings.Split(update.Message.Text, " ")
@@ -56,6 +57,7 @@ func startBot(cfg *config) {
 				}
 				continue
 			}
+
 			err = command.callback(update, bot, &msg, args...)
 			if err != nil {
 				msg.Text = err.Error()
@@ -67,6 +69,7 @@ func startBot(cfg *config) {
 			}
 			continue
 		}
+
 		if err := cfg.getChatResponse(bot, &msg, update.Message.Text); err != nil {
 			msg.Text = err.Error()
 			_, err := bot.Send(msg)
