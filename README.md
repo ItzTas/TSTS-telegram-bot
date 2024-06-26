@@ -13,4 +13,4 @@ to activate the ai you need to run artificial_inteligence/scripts/run_server.sh
 
 to see the comands run /help in the telegram chat
 
-due to limitations in the hardware the bot has a very bad ai but it is still possible to talk to it
+due to limitations in the hardware the bot has a very simple ai but it is still possible to talk to it
